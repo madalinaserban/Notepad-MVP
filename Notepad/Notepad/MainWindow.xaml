@@ -5,8 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Notepad"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Notepad++" Height="400" Width="525"
+        WindowStartupLocation="CenterScreen" Background="#FFB68DC8" Icon="Icon2.png" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="15">
+    <Window.DataContext>
+        <DockPanel Margin="0">
+        </DockPanel>
+    </Window.DataContext>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+         
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="tab_control">
+            <TabItem Header="Tab- 0">
+                    
+                </TabItem>
+        </TabControl>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Menu.Items>
+                <MenuItem Header="File">
+                    <MenuItem Header="New" Click="New"/>
+                    <MenuItem Header="Open" Click="Open" />
+                    <MenuItem Header="Save" Click="SaveFile"/>
+                    <MenuItem Header="Save as..." Click="SaveFileAs"/>
+                    <MenuItem Header="Exit" Click="Exit"/>
+
+                </MenuItem>
+                <MenuItem Header="About" Click="DisplayInfo">
+                </MenuItem>
+                <MenuItem Header="Show recent files">
+
+                </MenuItem>
+            </Menu.Items>
+        </Menu>
+        <TreeView Name="tree" Grid.Column="0" Grid.Row="2">
+        <TreeViewItem Header="Files">
+            <TreeViewItem Header="Notepad++" MouseDoubleClick="Open"></TreeViewItem>
+
+        </TreeViewItem>
+        </TreeView>
+        <TextBox Grid.Row="2" Grid.Column="2"
+                       VerticalScrollBarVisibility="Visible"
+                     FontSize="20"
+                     FontStyle="Italic"
+                     FontWeight="Thin"
+                     AcceptsReturn="True"
+                     AcceptsTab="True" Background="#FFE0C4EA"
+                     Name="tx1"/>
+            
     </Grid>
 </Window>
