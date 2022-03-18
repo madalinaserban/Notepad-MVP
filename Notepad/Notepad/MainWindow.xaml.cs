@@ -1,151 +1,141 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Shell;
 using TextBox = System.Windows.Controls.TextBox;
 namespace Notepad
 {
-
-    public partial class MainWindow : Window
+public partial class MainWindow : Window
     {
-        int numar = 0;
-        Document document=new Document();
-        
+        int TabIndex = 1;
+        ObservableCollection<TabVM> Tabs = new ObservableCollection<TabVM>();
         public MainWindow()
         {
             InitializeComponent();
-        }
-        private void SaveFile(object sender, RoutedEventArgs e)
-        {
-            if (document.save_flag == false)
-            { SaveFileAs(sender, e); }
-            else
+            var tab1 = new TabVM()
             {
-                File.WriteAllText(document.filename, tx1.Text);
-              
-            }
-
-        }
-        private void Open(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
-            if (openFileDialog.ShowDialog(this) == true)
-            {
-                this.tx1.Clear();
-                string path = openFileDialog.FileName;
-                document.set_path(path);
-                int pos = path.LastIndexOf("\\");
-                string ss = path.Substring(pos + 1);
-                // Open the file to read from.   
-
-                using (StreamReader sr = File.OpenText(path))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        this.tx1.AppendText(s + Environment.NewLine);
-
-                        document.countss = document.countss + s.Length + 1;
-                    }
-                    JumpList.AddToRecentCategory(path);
-                }
-            }
-
-
-        }
-        //private System.Windows.Controls.TextBox GetTextBox()
-        //{
-        //    //System.Windows.Controls.TextBox tb = null;
-        //    //TabPage tp=new TabPage();
-        //    //tab_control.SelectedTab
-
-        //    //  TabPage tp = tp.SelectedTab();
-        //    //object tp = tab_control.SelectedItem;
-        //    //if (tp != null)
-        //    //{
-        //    //    tb=tp
-        //    //}
-        //    //return tb;
-        //}
-        private TextBox GetTextBox()
-        { TextBox tb = null;
-            for(int i=0;i<=numar;i++)
-            {
-                if(tab_control.SelectedIndex==i)
-                {
-                    
-                }
-            }
-            return tb;
-        }
-        private void New(object sender, RoutedEventArgs e)
-        {
-            numar++;
-            MainWindow w = new MainWindow();
-            TabItem tp = new TabItem
-            {
-                Header = "Tab-" + numar,
+                Header = $"Tab {TabIndex}",
+                Content = new ContentVM("First tab", 1)
             };
-            // tp.Content=w;
-            //tp.Content = new MainWindow();
-            tab_control.Items.Add(tp);
+            Tabs.Add(tab1);
+            AddNewPlusButton();
+
+            MyTabControl.ItemsSource = Tabs;
+            MyTabControl.SelectionChanged += MyTabControl_SelectionChanged;
 
         }
 
-        private void OnNavigate(object sender, RequestNavigateEventArgs e)
+        private void MyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
-            e.Handled = true;
-        }
-        private void DisplayInfo(object sender, RoutedEventArgs e)
-        {
-            Info about = new Info();
-            about.ShowDialog();
-        }
-        private void SaveFileAs(object sender, RoutedEventArgs e)
-        {
-
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.DefaultExt = ".txt";
-            dlg.FileName = "Notepad.txt";
-            if (dlg.ShowDialog() == true)
+            if (e.Source is TabControl)
             {
-                File.WriteAllText(dlg.FileName, tx1.Text);
-                document.filename = dlg.FileName;
+                var pos = MyTabControl.SelectedIndex;
+                if (pos != 0 && pos == Tabs.Count - 1) //last tab
+                {
+                    var tab = Tabs.Last();
+                    ConvertPlusToNewTab(tab);
+                    AddNewPlusButton();
+                }
             }
-            document.save_flag = true;
-        }
-        private void Exit(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
         }
 
-        private void Find(object sender, EventArgs e)
+        void ConvertPlusToNewTab(TabVM tab)
         {
-            tx1.FindName(Name);
+            //Do things to make it a new tab.
+            TabIndex++;
+            tab.Header = $"Tab {TabIndex}";
+            tab.IsPlaceholder = false;
+            tab.Content = new ContentVM("Tab content", TabIndex);
         }
-        //private void Recent(object sender, RoutedEventArgs e)
-        //{
-        //    JumpList jumpList = new JumpList();
-        //    jumpList.ShowRecentCategory = true;
-        //    JumpList.SetJumpList(Application.Current, jumpList);
-        //}
+
+        void AddNewPlusButton()
+        {
+            var plusTab = new TabVM()
+            {
+                Header = "+",
+                IsPlaceholder = true
+            };
+            Tabs.Add(plusTab);
+        }
+
+        class TabVM : INotifyPropertyChanged
+        {
+            string _Header;
+            public string Header
+            {
+                get => _Header;
+                set
+                {
+                    _Header = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            bool _IsPlaceholder = false;
+            public bool IsPlaceholder
+            {
+                get => _IsPlaceholder;
+                set
+                {
+                    _IsPlaceholder = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            ContentVM _Content = null;
+            public ContentVM Content
+            {
+                get => _Content;
+                set
+                {
+                    _Content = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+            void OnPropertyChanged([CallerMemberName] string property = "")
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        class ContentVM
+        {
+            public ContentVM(string name, int index)
+            {
+                Name = name;
+                Index = index;
+            }
+            public string Name { get; set; }
+            public int Index { get; set; }
+        }
+
+        private void OnTabCloseClick(object sender, RoutedEventArgs e)
+        {
+            var tab = (sender as Button).DataContext as TabVM;
+            if (Tabs.Count > 2)
+            {
+                var index = Tabs.IndexOf(tab);
+                if (index == Tabs.Count - 2)//last tab before [+]
+                {
+                    MyTabControl.SelectedIndex--;
+                }
+                Tabs.RemoveAt(index);
+            }
+        }
     }
 }
+    

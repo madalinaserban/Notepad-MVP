@@ -17,7 +17,7 @@
              C# WPF notepad++ application
             <LineBreak/>
                 Student: Serban Elena Madalina
-                     <Hyperlink NavigateUri="google.com" RequestNavigate="OnNavigate">      <LineBreak/>
+                     <Hyperlink NavigateUri="google.com">      <LineBreak/>
                                     mail:madalina_serban01@yahoo.com
                             </Hyperlink>
             </TextBlock>

@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Notepad"
+        xmlns:viewmodels="clr-namespace:Notepad.ViewModel"
         mc:Ignorable="d"
         Title="Notepad++" Height="400" Width="525"
         WindowStartupLocation="CenterScreen" Background="#FFB68DC8" Icon="Icon2.png" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="15">
     <Window.DataContext>
-        <DockPanel Margin="0">
-        </DockPanel>
+        <viewmodels:MainViewModel/>
+
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,42 +23,89 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="tab_control">
-            <TabItem Header="Tab- 0">
-                    
-                </TabItem>
+        <TabControl Name="MyTabControl" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Header, Mode=OneWay}" />
+                        <Button Click="OnTabCloseClick" Width="20" Padding="0" Margin="8 0 0 0" Content="X">
+                            <Button.Style>
+                                <Style TargetType="Button" x:Name="CloseButtonStyle">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPlaceholder}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl>
+                        <ContentControl.Resources>
+                            <ContentControl x:Key="TabContentTemplate">
+                                <StackPanel DataContext="{Binding Content}" Orientation="Vertical">
+                                    <TextBlock Text="{Binding Path=Name}"/>
+                                    <TextBlock Text="{Binding Path=Index}"/>
+                                </StackPanel>
+                            </ContentControl>
+                        </ContentControl.Resources>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPlaceholder}" Value="True">
+                                        <Setter Property="Content"
+                                        Value="{x:Null}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsPlaceholder}" Value="False">
+                                        <Setter Property="Content"
+                                        Value="{StaticResource TabContentTemplate}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <Menu.Items>
                 <MenuItem Header="File">
-                    <MenuItem Header="New" Click="New"/>
-                    <MenuItem Header="Open" Click="Open" />
-                    <MenuItem Header="Save" Click="SaveFile"/>
-                    <MenuItem Header="Save as..." Click="SaveFileAs"/>
-                    <MenuItem Header="Exit" Click="Exit"/>
+                    <MenuItem Header="New" Command="{Binding File.NewCommand}"/>
+                    <MenuItem Header="Open" Command="{Binding File.OpenCommand}" />
+                    <MenuItem Header="Save" Command="{Binding File.SaveCommand}"/>
+                    <MenuItem Header="Save as..." Command="{Binding File.SaveAsCommand}"/>
+                    <MenuItem Header="Exit" Command="{Binding File.ExitCommand}"/>
 
                 </MenuItem>
-                <MenuItem Header="About" Click="DisplayInfo">
+                <MenuItem Header="About" Command="{Binding AboutFile.AboutCommand}">
                 </MenuItem>
-                <MenuItem Header="Show recent files">
+                <MenuItem Header="Show recent files" >
 
                 </MenuItem>
             </Menu.Items>
         </Menu>
         <TreeView Name="tree" Grid.Column="0" Grid.Row="2">
         <TreeViewItem Header="Files">
-            <TreeViewItem Header="Notepad++" MouseDoubleClick="Open"></TreeViewItem>
+            <TreeViewItem Header="Notepad++"></TreeViewItem>
 
         </TreeViewItem>
         </TreeView>
         <TextBox Grid.Row="2" Grid.Column="2"
                        VerticalScrollBarVisibility="Visible"
+                     DataContext="{Binding File}"
                      FontSize="20"
                      FontStyle="Italic"
                      FontWeight="Thin"
                      AcceptsReturn="True"
                      AcceptsTab="True" Background="#FFE0C4EA"
-                     Name="tx1"/>
+                      Text="{Binding Document.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Name="tx1"/>
             
     </Grid>
 </Window>
