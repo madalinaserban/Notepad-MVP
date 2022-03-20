@@ -40,6 +40,6 @@ namespace Notepad
             set { OnPropertyChanged(ref _filePath, value); }
         }
         public string _Header;
-        public string _Content;
+
     }
 }

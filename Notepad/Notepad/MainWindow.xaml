@@ -43,47 +43,20 @@
             </TreeViewItem>
         </TreeView>
 
-        <TabControl Name="MyTabControl" Grid.Row="1" Grid.Column="1">
+        <TabControl Name="tab" ItemsSource="{Binding File.Tabs}" Grid.Column="1" Grid.Row="2">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Header, Mode=OneWay}" />
-                        <Button Click="OnTabCloseClick" Width="20" Padding="0" Margin="8 0 0 0" Content="X">
-                            <Button.Style>
-                                <Style TargetType="Button" x:Name="CloseButtonStyle">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPlaceholder}" Value="True">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
+                    <TextBlock Text="{Binding FileName}"/>
                 </DataTemplate>
             </TabControl.ItemTemplate>
-
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <RichTextBox AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <FlowDocument>
-                            <Paragraph>
-                                <Run Text="{Binding _ContentVM, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            </Paragraph>
-                        </FlowDocument>
-                    </RichTextBox>
+                    <TextBox Text="{Binding Text ,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
+                           VerticalScrollBarVisibility="Visible">
+
+                    </TextBox>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
-        <!--<TextBox Grid.Row="1"
-                       VerticalScrollBarVisibility="Visible"
-                       DataContext="{Binding File}"
-                     FontSize="20"
-                     FontStyle="Italic"
-                     FontWeight="Thin"
-                     AcceptsReturn="True"
-                     AcceptsTab="True" Background="#FFE0C4EA"
-                        Text="{Binding Document.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2" Margin="129,29,-0.333,-29.333"/>-->
     </Grid>
 </Window>

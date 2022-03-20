@@ -14,6 +14,7 @@ namespace Notepad.ViewModel
     public class DocumentViewModel
     {
         public ObservableCollection<DocumentModel> Tabs { get; set; }
+        private bool save = false;
         public DocumentModel Document { get; set; }
         public ICommand NewCommand { get; }
         public ICommand SaveCommand { get; }
@@ -22,6 +23,7 @@ namespace Notepad.ViewModel
         public ICommand ExitCommand { get; }
         public DocumentViewModel(DocumentModel document)
         {
+            Tabs = new ObservableCollection<DocumentModel>();
             Document = document;
             NewCommand = new RelayCommand(NewFile);
             SaveCommand = new RelayCommand(SaveFile);
@@ -36,30 +38,32 @@ namespace Notepad.ViewModel
         }
         public void NewFile()
         {
-            Document.FileName = string.Empty;
-            Document.FilePath = string.Empty;
-            Document.Text = string.Empty;
-            TabModel tab = new TabModel();
+            DocumentModel t = new DocumentModel()
             {
-                //  tab.Tabs.Add(tab);
-
-              //  Tabs.Add(tab);
-                //tab._Header = "a";
+                FileName = "File 1",
+                Text = " "
             };
-        }
 
+            Tabs.Add(t);
+        }
         private void SaveFile()
-        {
-            File.WriteAllText(Document.FilePath, Document.Text);
+        {if (save == false)
+            {
+                SaveFileAs();
+            }
+            else
+            { File.WriteAllText(Document.FilePath, Document.Text); }
         }
 
         private void SaveFileAs()
         {
+            DocumentModel t = Tabs[Tabs.Count() - 1];
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
             saveFileDialog.Filter = "Text File (*.txt)|*.txt";
             if (saveFileDialog.ShowDialog() == true)
             {
-                File.WriteAllText(saveFileDialog.FileName, Document.Text);
+                save = true;
+                File.WriteAllText(saveFileDialog.FileName, t.Text);
                 Document.FileName = saveFileDialog.SafeFileName;
                 Document.FilePath = saveFileDialog.FileName;
             }
@@ -70,25 +74,15 @@ namespace Notepad.ViewModel
             var openFileDialog = new Microsoft.Win32.OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                Document.Text = File.ReadAllText(openFileDialog.FileName);
-                Document.FileName = openFileDialog.SafeFileName;
-                Document.FilePath = openFileDialog.FileName;
-
+                DocumentModel t = new DocumentModel()
+                {
+                    Text = File.ReadAllText(openFileDialog.FileName),
+                    FileName = openFileDialog.SafeFileName,
+                    FilePath = openFileDialog.FileName
+                };
+                Tabs.Add(t);
             }
+
         }
-        //public ObservableCollection<TabItem> Tabs { get; set; };
-        //private void MyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (e.Source is System.Windows.Controls.TabControl)
-        //    {
-        //        var pos = MyTabControl.SelectedIndex;
-        //        if (pos != 0 && pos == Tabs.Count - 1) //last tab
-        //        {
-        //            var tab = Tabs.Last();
-        //            ConvertPlusToNewTab(tab);
-        //            AddNewPlusButton();
-        //        }
-        //    }
-        //}
     }
 }
