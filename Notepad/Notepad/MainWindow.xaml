@@ -15,15 +15,35 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-         
+
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <TabControl Name="MyTabControl" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Menu.Items>
+                <MenuItem Header="File">
+                    <MenuItem Header="New" Command="{Binding File.NewCommand}"/>
+                    <MenuItem Header="Open" Command="{Binding File.OpenCommand}" />
+                    <MenuItem Header="Save" Command="{Binding File.SaveCommand}"/>
+                    <MenuItem Header="Save as..." Command="{Binding File.SaveAsCommand}"/>
+                    <MenuItem Header="Exit" Command="{Binding File.ExitCommand}"/>
+
+                </MenuItem>
+                <MenuItem Header="About" Command="{Binding AboutFile.AboutCommand}">
+                </MenuItem>
+            </Menu.Items>
+        </Menu>
+        <TreeView Name="tree" Grid.Column="0" Grid.Row="2">
+            <TreeViewItem Header="Files">
+                <TreeViewItem Header="Notepad++"></TreeViewItem>
+
+            </TreeViewItem>
+        </TreeView>
+
+        <TabControl Name="MyTabControl" Grid.Row="1" Grid.Column="1">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -46,66 +66,24 @@
 
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl>
-                        <ContentControl.Resources>
-                            <ContentControl x:Key="TabContentTemplate">
-                                <StackPanel DataContext="{Binding Content}" Orientation="Vertical">
-                                    <TextBlock Text="{Binding Path=Name}"/>
-                                    <TextBlock Text="{Binding Path=Index}"/>
-                                </StackPanel>
-                            </ContentControl>
-                        </ContentControl.Resources>
-                        <ContentControl.Style>
-                            <Style TargetType="ContentControl">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPlaceholder}" Value="True">
-                                        <Setter Property="Content"
-                                        Value="{x:Null}"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsPlaceholder}" Value="False">
-                                        <Setter Property="Content"
-                                        Value="{StaticResource TabContentTemplate}"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                    </ContentControl>
+                    <RichTextBox AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding _ContentVM, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
-        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <Menu.Items>
-                <MenuItem Header="File">
-                    <MenuItem Header="New" Command="{Binding File.NewCommand}"/>
-                    <MenuItem Header="Open" Command="{Binding File.OpenCommand}" />
-                    <MenuItem Header="Save" Command="{Binding File.SaveCommand}"/>
-                    <MenuItem Header="Save as..." Command="{Binding File.SaveAsCommand}"/>
-                    <MenuItem Header="Exit" Command="{Binding File.ExitCommand}"/>
-
-                </MenuItem>
-                <MenuItem Header="About" Command="{Binding AboutFile.AboutCommand}">
-                </MenuItem>
-                <MenuItem Header="Show recent files" >
-
-                </MenuItem>
-            </Menu.Items>
-        </Menu>
-        <TreeView Name="tree" Grid.Column="0" Grid.Row="2">
-        <TreeViewItem Header="Files">
-            <TreeViewItem Header="Notepad++"></TreeViewItem>
-
-        </TreeViewItem>
-        </TreeView>
-        <TextBox Grid.Row="2" Grid.Column="2"
+        <!--<TextBox Grid.Row="1"
                        VerticalScrollBarVisibility="Visible"
-                     DataContext="{Binding File}"
+                       DataContext="{Binding File}"
                      FontSize="20"
                      FontStyle="Italic"
                      FontWeight="Thin"
                      AcceptsReturn="True"
                      AcceptsTab="True" Background="#FFE0C4EA"
-                      Text="{Binding Document.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Name="tx1"/>
-            
+                        Text="{Binding Document.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2" Margin="129,29,-0.333,-29.333"/>-->
     </Grid>
 </Window>

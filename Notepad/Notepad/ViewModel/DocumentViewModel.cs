@@ -73,6 +73,7 @@ namespace Notepad.ViewModel
                 Document.Text = File.ReadAllText(openFileDialog.FileName);
                 Document.FileName = openFileDialog.SafeFileName;
                 Document.FilePath = openFileDialog.FileName;
+
             }
         }
         //public ObservableCollection<TabItem> Tabs { get; set; };

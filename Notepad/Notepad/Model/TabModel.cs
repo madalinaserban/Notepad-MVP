@@ -29,17 +29,6 @@ namespace Notepad.ViewModel
             }
         }
 
-        //ContentVM _Content = null;
-        //public ContentVM Content
-        //{
-        //    get => _Content;
-        //    set
-        //    {
-        //        _Content = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged([CallerMemberName] string property = "")
         {

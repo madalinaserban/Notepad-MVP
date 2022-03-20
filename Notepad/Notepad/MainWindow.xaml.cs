@@ -57,7 +57,6 @@ public partial class MainWindow : Window
             TabIndex++;
             tab.Header = $"Tab {TabIndex}";
             tab.IsPlaceholder = false;
-            tab.Content = new ContentVM("Tab content", TabIndex);
         }
 
         void AddNewPlusButton()

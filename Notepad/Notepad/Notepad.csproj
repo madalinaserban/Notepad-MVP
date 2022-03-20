@@ -57,7 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\DocumentModel.cs" />
-    <Compile Include="ViewModel\TabModel.cs" />
+    <Compile Include="Model\TabModel.cs" />
     <Compile Include="ObsObject.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModel\About.cs" />
