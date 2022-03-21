@@ -12,13 +12,9 @@ namespace Notepad
 {
     public class DocumentModel : ObsObject
     {
-        //public TabControl Tab_Control
-        //{
-        //    get { };
-
-        //}
         private string _text;
-
+        public bool save_flag=false;
+        private int current_tab_index;
         public string Text
         {
             get { return _text; }
@@ -39,7 +35,13 @@ namespace Notepad
             get { return _filePath; }
             set { OnPropertyChanged(ref _filePath, value); }
         }
-        public string _Header;
+        public int CurrentSelectedTab
+        {
+            get { return current_tab_index; }
+            set { OnPropertyChanged(ref current_tab_index, value); }
+
+           
+        }
 
     }
 }

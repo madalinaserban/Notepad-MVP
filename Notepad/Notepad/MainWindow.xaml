@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:Notepad.ViewModel"
         mc:Ignorable="d"
         Title="Notepad++" Height="400" Width="525"
-        WindowStartupLocation="CenterScreen" Background="#FFB68DC8" Icon="Icon2.png" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="15">
+        WindowStartupLocation="CenterScreen" Background="#FFD4BCF7" Icon="Icon2.png" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="15" BorderBrush="#FFB678D7">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
 
@@ -32,7 +32,11 @@
                     <MenuItem Header="Exit" Command="{Binding File.ExitCommand}"/>
 
                 </MenuItem>
-                <MenuItem Header="About" Command="{Binding AboutFile.AboutCommand}">
+                <MenuItem Header="About" Command="{Binding AboutFile.AboutCommand}"/>
+                <MenuItem Header="Search">
+                <MenuItem Header="Find" Command="{Binding File.FindCommand}"/>
+                <MenuItem Header="Replace" Command="{Binding File.ReplaceCommand}" />
+                    <MenuItem Header="Replace All" Command="{Binding File.ReplaceAllCommand}"/>
                 </MenuItem>
             </Menu.Items>
         </Menu>
@@ -43,18 +47,27 @@
             </TreeViewItem>
         </TreeView>
 
-        <TabControl Name="tab" ItemsSource="{Binding File.Tabs}" Grid.Column="1" Grid.Row="2">
+        <TabControl Name="tab" ItemsSource="{Binding File.Tabs}" Grid.Column="1" Grid.Row="2" SelectedIndex="{Binding _document.CurrentSelectedTab}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding FileName}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding FileName}"/>
+                        <Button  Content="X" Command="{Binding DataContext.Close,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}}"/>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <TextBox Text="{Binding Text ,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"
-                           VerticalScrollBarVisibility="Visible">
+                           VerticalScrollBarVisibility="Visible"
+                              FontSize="20"
+                     FontStyle="Italic"
+                     FontWeight="Thin"
+                     AcceptsReturn="True"
+                     AcceptsTab="True">
 
                     </TextBox>
+                    
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

@@ -16,3 +16,5 @@ C:\Semestrul 2\MVP\Notepad-MVP\Notepad\Notepad\obj\Debug\Notepad.exe
 C:\Semestrul 2\MVP\Notepad-MVP\Notepad\Notepad\obj\Debug\Notepad.pdb
 C:\Semestrul 2\MVP\Notepad-MVP\Notepad\Notepad\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Semestrul 2\MVP\Notepad-MVP\Notepad\Notepad\obj\Debug\Notepad.csproj.AssemblyReference.cache
+C:\Semestrul 2\MVP\Notepad-MVP\Notepad\Notepad\obj\Debug\ViewModel\DialogBox.g.cs
+C:\Semestrul 2\MVP\Notepad-MVP\Notepad\Notepad\obj\Debug\ViewModel\DialogBox.baml

@@ -14,13 +14,17 @@ namespace Notepad.ViewModel
     public class DocumentViewModel
     {
         public ObservableCollection<DocumentModel> Tabs { get; set; }
-        private bool save = false;
         public DocumentModel Document { get; set; }
         public ICommand NewCommand { get; }
         public ICommand SaveCommand { get; }
         public ICommand SaveAsCommand { get; }
         public ICommand OpenCommand { get; }
         public ICommand ExitCommand { get; }
+        public ICommand FindCommand { get; }
+        public ICommand ReplaceCommand { get; }
+        public ICommand ReplaceAllCommand { get; }
+
+        public ICommand CloseTabCommand { get;}
         public DocumentViewModel(DocumentModel document)
         {
             Tabs = new ObservableCollection<DocumentModel>();
@@ -30,42 +34,109 @@ namespace Notepad.ViewModel
             SaveAsCommand = new RelayCommand(SaveFileAs);
             OpenCommand = new RelayCommand(OpenFile);
             ExitCommand = new RelayCommand(Exit);
+            FindCommand = new RelayCommand(Find);
+            ReplaceCommand = new RelayCommand(Replace);
+            ReplaceAllCommand = new RelayCommand(ReplaceAll);
+           // CloseTabCommand = new RelayCommand(CloseTab);
         }
 
         private void Exit()
         {
             System.Windows.Application.Current.Shutdown();
         }
+        public void Find()
+        {
+            var dialogBox = new DialogBox();
+            string prop="Word to find :";
+            dialogBox.CreateDialogBox(prop);
+            dialogBox.ShowDialog();
+            var response = dialogBox.GetResponseTexts();
+            for(int i=0;i<Tabs.Count();i++)
+            {
+                if(Tabs[i].Text.Contains(response))
+                {
+                  Tabs[i].Text=  Tabs[i].Text.Replace(response, "!$!" + response + "!$!");
+                }
+            }
+        }
+        public void Replace()
+        { 
+            var dialogBox = new DialogBox();
+            string prop = "Word to replace:";
+            dialogBox.CreateDialogBox(prop);
+            dialogBox.ShowDialog();
+            var response = dialogBox.GetResponseTexts();
+            string prop2 = "New word :";
+            var dialogBox2 = new DialogBox();
+            dialogBox2.CreateDialogBox(prop2);
+            dialogBox2.ShowDialog();
+            var response2 = dialogBox2.GetResponseTexts();
+            for (int i = 0; i < Tabs.Count(); i++)
+            {
+                if (Tabs[i].Text.Contains(response))
+                {
+                    //Tabs[i].Text = "L-a gasit";
+                    Tabs[i].Text = Tabs[i].Text.Replace(response,  response2);
+                    Tabs[i].FileName = Tabs[i].FileName + "*";
+                    break;
+                }
+            }
+        }
+        public void ReplaceAll()
+        {
+            var dialogBox = new DialogBox();
+            string prop = "Word to replace:";
+            dialogBox.CreateDialogBox(prop);
+            dialogBox.ShowDialog();
+            var response = dialogBox.GetResponseTexts();
+            string prop2 = "New word :";
+            var dialogBox2 = new DialogBox();
+            dialogBox2.CreateDialogBox(prop2);
+            dialogBox2.ShowDialog();
+            var response2 = dialogBox2.GetResponseTexts();
+            for (int i = 0; i < Tabs.Count(); i++)
+            {
+                if (Tabs[i].Text.Contains(response))
+                {
+                    //Tabs[i].Text = "L-a gasit";
+                    Tabs[i].Text = Tabs[i].Text.Replace(response, response2);
+                    Tabs[i].FileName = Tabs[i].FileName + "*";
+                }
+            }
+        }
         public void NewFile()
         {
             DocumentModel t = new DocumentModel()
             {
-                FileName = "File 1",
+                FileName = "File " +Tabs.Count()+"*",
                 Text = " "
             };
 
             Tabs.Add(t);
         }
         private void SaveFile()
-        {if (save == false)
-            {
-                SaveFileAs();
+        {
+             DocumentModel t = Tabs[Document.CurrentSelectedTab];
+            if (t.save_flag)
+            { File.WriteAllText(Document.FilePath, t.Text); }
+            else { SaveFileAs();
+                Tabs[Document.CurrentSelectedTab].FileName= t.FileName.Replace("*", "");
             }
-            else
-            { File.WriteAllText(Document.FilePath, Document.Text); }
         }
 
         private void SaveFileAs()
-        {
-            DocumentModel t = Tabs[Tabs.Count() - 1];
+        { 
+            DocumentModel t = Tabs[Document.CurrentSelectedTab];
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
             saveFileDialog.Filter = "Text File (*.txt)|*.txt";
             if (saveFileDialog.ShowDialog() == true)
             {
-                save = true;
                 File.WriteAllText(saveFileDialog.FileName, t.Text);
                 Document.FileName = saveFileDialog.SafeFileName;
                 Document.FilePath = saveFileDialog.FileName;
+                t.FileName.Replace("*", "");
+                Tabs[Document.CurrentSelectedTab].FileName = t.FileName.Replace("*", "");
+                t.save_flag = true;
             }
         }
 
@@ -74,15 +145,18 @@ namespace Notepad.ViewModel
             var openFileDialog = new Microsoft.Win32.OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
+
                 DocumentModel t = new DocumentModel()
                 {
                     Text = File.ReadAllText(openFileDialog.FileName),
                     FileName = openFileDialog.SafeFileName,
-                    FilePath = openFileDialog.FileName
+                    FilePath = openFileDialog.FileName,
+                    save_flag = true
                 };
                 Tabs.Add(t);
             }
 
         }
+     
     }
 }

@@ -13,8 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Shell;
-using TextBox = System.Windows.Controls.TextBox;
 namespace Notepad
 {
     public partial class MainWindow : Window
@@ -25,7 +23,17 @@ namespace Notepad
 
 
         }
+        // TabItem t = tab.SelectedItem;
+        public int CurrentSelectedTab()
+        {
+            int i = tab.SelectedIndex;
+            return i;
+        }
 
+        private void OnTabCloseClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
     

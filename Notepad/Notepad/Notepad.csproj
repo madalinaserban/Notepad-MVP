@@ -57,10 +57,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\DocumentModel.cs" />
-    <Compile Include="Model\TabModel.cs" />
     <Compile Include="ObsObject.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModel\About.cs" />
+    <Compile Include="ViewModel\DialogBox.xaml.cs">
+      <DependentUpon>DialogBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\DocumentViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Page Include="Info.xaml">
@@ -82,6 +84,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ViewModel\DialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -109,7 +115,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="ViewModel\Icon2.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Icon2.png" />
   </ItemGroup>

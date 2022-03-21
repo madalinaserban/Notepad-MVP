@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Notepad"
         mc:Ignorable="d"
-        Title="About" Height="150" Width="405">
+        Title="About" Height="150" Width="405" Icon="Icon2.png">
 
-    <Grid>
+    <Grid Background="#FFEAE0F9">
         <StackPanel  HorizontalAlignment="Center">
             <TextBlock FontSize="18"
                    FontWeight="SemiBold">

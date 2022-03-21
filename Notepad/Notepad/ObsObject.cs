@@ -22,20 +22,6 @@ namespace Notepad
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
             }
-        private ObservableCollection<UserControl> _pageViews;
-
-
-        public ObservableCollection<UserControl> PageViews
-        {
-            get
-            {
-                if (_pageViews == null)
-                {
-                    _pageViews = new ObservableCollection<UserControl>();
-                }
-                return _pageViews;
-            }
-        }
     }
 
 }
