@@ -76,11 +76,14 @@ namespace Notepad.ViewModel
                 if (Tabs[i].Text.Contains(response))
                 {
                     //Tabs[i].Text = "L-a gasit";
-                    Tabs[i].Text = Tabs[i].Text.Replace(response,  response2);
-                    Tabs[i].FileName = Tabs[i].FileName + "*";
-                    break;
+                    Tabs[i].Text = Tabs[i].Text.Replace(response, response2);
+                    string name = Tabs[i].FileName;
+                    if (name.Contains("*") == false)
+                    { Tabs[i].FileName = Tabs[i].FileName + "*"; }
                 }
+                break;
             }
+            
         }
         public void ReplaceAll()
         {
@@ -100,7 +103,9 @@ namespace Notepad.ViewModel
                 {
                     //Tabs[i].Text = "L-a gasit";
                     Tabs[i].Text = Tabs[i].Text.Replace(response, response2);
-                    Tabs[i].FileName = Tabs[i].FileName + "*";
+                    string name = Tabs[i].FileName;
+                    if (name.Contains("*") == false)
+                    { Tabs[i].FileName = Tabs[i].FileName + "*"; }
                 }
             }
         }
@@ -117,8 +122,9 @@ namespace Notepad.ViewModel
         private void SaveFile()
         {
              DocumentModel t = Tabs[Document.CurrentSelectedTab];
+
             if (t.save_flag)
-            { File.WriteAllText(Document.FilePath, t.Text); }
+            { File.WriteAllText(Document.FilePath, t.Text); Tabs[Document.CurrentSelectedTab].FileName = t.FileName.Replace("*", ""); }
             else { SaveFileAs();
                 Tabs[Document.CurrentSelectedTab].FileName= t.FileName.Replace("*", "");
             }

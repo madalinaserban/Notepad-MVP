@@ -19,7 +19,7 @@ namespace Notepad.ViewModel
             foreach (var textBox in textBoxes)
             {
                 if (textBox.Text.Length == 0 )
-                    response=".";
+                    response="";
                 else
                     response=textBox.Text;
             }
